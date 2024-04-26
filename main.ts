@@ -29,8 +29,8 @@ const DEFAULT_SETTINGS: ViewModeByFrontmatterSettings = {
 export default class ViewModeByFrontmatterPlugin extends Plugin {
   settings: ViewModeByFrontmatterSettings;
 
-  OBSIDIAN_UI_MODE_KEY = "obsidianUIMode";
-  OBSIDIAN_EDITING_MODE_KEY = "obsidianEditingMode";
+  OBSIDIAN_UI_MODE_KEY = "editing_lock";
+  OBSIDIAN_EDITING_MODE_KEY = "live_preview";
 
   openedFiles: String[];
 
@@ -75,17 +75,17 @@ export default class ViewModeByFrontmatterPlugin extends Plugin {
         if (key === "default") {
           folderOrFileModeState = null; // ensures that no state is set
           return;
-        } else if (!["live", "preview", "source"].includes(mode)) {
+        } else if (!["true", "false"].includes(mode)) {
           return;
         }
 
         folderOrFileModeState = { ...state.state };
 
-        folderOrFileModeState.mode = mode;
+        folderOrFileModeState.mode = mode ? "live" : "source";
 
         switch (key) {
           case this.OBSIDIAN_EDITING_MODE_KEY: {
-            if (mode == "live") {
+            if (mode) {
               folderOrFileModeState.source = false;
               folderOrFileModeState.mode = "source";
             } else {
@@ -150,11 +150,11 @@ export default class ViewModeByFrontmatterPlugin extends Plugin {
       const fileCache = this.app.metadataCache.getFileCache(view.file);
       const fileDeclaredUIMode =
         fileCache !== null && fileCache.frontmatter
-          ? fileCache.frontmatter[this.OBSIDIAN_UI_MODE_KEY]
+          ? fileCache.frontmatter[this.OBSIDIAN_UI_MODE_KEY] ? "preview" : "source"
           : null;
       const fileDeclaredEditingMode =
         fileCache !== null && fileCache.frontmatter
-          ? fileCache.frontmatter[this.OBSIDIAN_EDITING_MODE_KEY]
+          ? fileCache.frontmatter[this.OBSIDIAN_EDITING_MODE_KEY] ? "live" : "source"
           : null;
 
 
@@ -343,10 +343,10 @@ class ViewModeByFrontmatterSettingTab extends PluginSettingTab {
 
     const modes = [
       "default",
-      "obsidianUIMode: preview",
-      "obsidianUIMode: source",
-      "obsidianEditingMode: live",
-      "obsidianEditingMode: source",
+      "editing_lock: true",
+      "editing_lock: false",
+      "live_preview: true",
+      "live_preview: false",
     ]
 
     createHeader("Folders")
