@@ -5,6 +5,6 @@
 	"minAppVersion": "0.9.12",
 	"description": "This plugin allows to force the view mode and editing mode for a note by using front matter",
 	"author": "Benny Wydooghe, Emile Bangma",
-	"authorUrl": "https://i-net.be",
+	"authorUrl": "https://github.com/saberzero1/obsidian-force-view-mode-of-note",
 	"isDesktopOnly": false
 }
